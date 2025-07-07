@@ -36,6 +36,4 @@ RUN \
     && \
     apk add --virtual .php-ext-rundeps $runDeps \
     && \
-    apk del .build-deps \
-    && \
-    php -m | grep -E '(redis|bz2|gettext|gmp|pcntl|soap|tidy|xsl)'
+    apk del .build-deps
