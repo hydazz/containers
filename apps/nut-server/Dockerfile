@@ -16,23 +16,18 @@ USER root
 RUN \
     apk add --no-cache \
         catatonit \
+        eudev \
+        hidapi \
         libusb \
-        net-snmp \
-        openssl \
     && \
     apk add --no-cache --virtual=.build-deps \
-        asciidoc \
         autoconf \
         automake \
-        g++ \
-        gcc \
+        build-base \
         git \
-        libusb-dev \
         libtool \
-        make \
-        net-snmp-dev \
-        openssl-dev \
-        py3-pip \
+        libusb-dev \
+        openssl-dev>3 \
         python3 \
     && \
     git clone https://github.com/networkupstools/nut.git /tmp/nut \
@@ -44,14 +39,31 @@ RUN \
     ./autogen.sh \
     && \
     ./configure \
+        --datadir=/usr/share/nut \
+        --disable-static \
+        --libexecdir=/usr/lib/nut \
         --prefix=/usr \
         --sysconfdir=/etc/nut \
-        --localstatedir=/var \
+        --with-altpidpath=/var/run/nut \
+        --with-drvpath=/usr/lib/nut \
+        --with-user=nobody \
+        --with-group=nogroup \
+        --with-libltdl \
+        --with-openssl \
+        --with-serial \
+        --with-statepath=/var/run/nut \
+        --with-udev-dir=/usr/lib/udev \
         --with-usb \
-        --with-snmp \
-        --with-ssl \
-        --without-doc \
-        --disable-static \
+        --without-avahi \
+        --without-cgi \
+        --without-freeipmi \
+        --without-ipmi \
+        --without-modbus \
+        --without-neon \
+        --without-nss \
+        --without-powerman \
+        --without-snmp \
+        --without-wrap \
     && \
     make && make install \
     && \
