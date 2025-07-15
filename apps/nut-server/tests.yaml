@@ -1,0 +1,15 @@
+---
+schemaVersion: "2.0.0"
+fileExistenceTests:
+  - name: upsd
+    path: /usr/sbin/upsd
+    shouldExist: true
+  - name: upsdrvctl
+    path: /usr/sbin/upsdrvctl
+    shouldExist: true
+
+commandTests:
+  - name: upsd version
+    command: "upsd"
+    args: ["-h"]
+    expectedOutput: ["Network UPS Tools"]

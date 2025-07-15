@@ -1,12 +1,12 @@
 target "docker-metadata-action" {}
 
 variable "VERSION" {
-  // renovate: datasource=github-releases depName=influxdata/telegraf
-  default = "1.35.1"
+  // renovate: datasource=github-releases depName=networkupstools/nut
+  default = "2.8.2"
 }
 
 variable "SOURCE" {
-  default = "https://github.com/influxdata/telegraf"
+  default = "https://github.com/networkupstools/nut"
 }
 
 group "default" {
