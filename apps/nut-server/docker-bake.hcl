@@ -2,7 +2,7 @@ target "docker-metadata-action" {}
 
 variable "VERSION" {
   // renovate: datasource=github-releases depName=networkupstools/nut
-  default = "2.8.2"
+  default = "2.8.3"
 }
 
 variable "SOURCE" {
@@ -31,7 +31,6 @@ target "image-local" {
 target "image-all" {
   inherits = ["image"]
   platforms = [
-    "linux/amd64",
-    "linux/arm64"
+    "linux/amd64"
   ]
 }
