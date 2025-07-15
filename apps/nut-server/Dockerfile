@@ -47,8 +47,8 @@ RUN \
         --sysconfdir=/etc/nut \
         --with-altpidpath=/var/run/nut \
         --with-drvpath=/usr/lib/nut \
-        --with-user=nobody \
-        --with-group=nogroup \
+        #--with-user=nobody \
+        #--with-group=nogroup \
         --with-libltdl \
         --with-openssl \
         --with-serial \
@@ -74,6 +74,6 @@ RUN \
 
 COPY . /
 
-USER nobody:nogroup
+#USER nobody:nogroup
 
 ENTRYPOINT ["/usr/bin/catatonit", "--", "/entrypoint.sh"]
