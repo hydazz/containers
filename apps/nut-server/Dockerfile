@@ -68,6 +68,8 @@ RUN \
     && \
     make && make install \
     && \
+	mkdir -p /var/run/nut \
+	&& \
     apk del --purge .build-deps \
     && \
     rm -rf /tmp/*
