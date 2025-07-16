@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
-ARG VERSION
-FROM wordpress:${VERSION}
+ARG TAG
+FROM wordpress:${TAG}
 
 # Install PHP extensions
 RUN \
