@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # renovate: datasource=docker depName=wordpress versioning=docker
-FROM wordpress:6.8.1-fpm-alpine@sha256:82eac77ce336f1b74fbdd346d67080b2ffb0e6f1840955d61824a491ec779a3c
+FROM wordpress:6.8.2-fpm-alpine@sha256:40dcd57f9b12fae9a641a448426dbc6382f2dc77e0ddb4a1c9049c610745360b
 
 # Install PHP extensions
 RUN \
