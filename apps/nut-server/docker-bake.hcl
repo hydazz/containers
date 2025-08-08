@@ -2,7 +2,7 @@ target "docker-metadata-action" {}
 
 variable "VERSION" {
   // renovate: datasource=github-releases depName=networkupstools/nut
-  default = "2.8.3"
+  default = "2.8.4"
 }
 
 variable "SOURCE" {
