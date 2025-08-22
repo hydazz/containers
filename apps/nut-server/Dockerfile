@@ -1,20 +1,13 @@
 # syntax=docker/dockerfile:1
 
-ARG TARGETPLATFORM
-ARG TARGETARCH
-ARG TARGETOS
 FROM docker.io/library/alpine:3.22
 ARG VERSION
-
-LABEL internal.flatops.image.target_platform=$TARGETPLATFORM
-LABEL internal.flatops.image.target_architecture=$TARGETARCH
-LABEL internal.flatops.image.target_os=$TARGETOS
-LABEL org.opencontainers.image.source="https://github.com/networkupstools/nut"
 
 USER root
 
 RUN \
     apk add --no-cache \
+        bash \
         catatonit \
         eudev \
         hidapi \
