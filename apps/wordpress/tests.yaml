@@ -13,3 +13,8 @@ command:
       - soap
       - tidy
       - xsl
+  wp-cli-version:
+    exec: "wp --allow-root --version"
+    exit-status: 0
+    stdout:
+      - "WP-CLI"

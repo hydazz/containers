@@ -3,7 +3,10 @@
 # renovate: datasource=docker depName=wordpress versioning=docker
 FROM wordpress:6.8.2-fpm-alpine@sha256:688d09e4832b527078b98e84e5d96698c2643e6563ea05764d0ce7a03d93d588
 
-# Install PHP extensions
+# renovate: datasource=github-releases depName=wp-cli/wp-cli
+ENV WORDPRESS_CLI_VERSION 2.11.0
+
+# Install PHP extensions and WP-CLI
 RUN \
     apk add --no-cache --virtual .build-deps \
         $PHPIZE_DEPS \
@@ -36,4 +39,8 @@ RUN \
     && \
     apk add --virtual .php-ext-rundeps $runDeps \
     && \
-    apk del .build-deps
+    apk del .build-deps \
+    && \
+    curl -o /usr/local/bin/wp -fL "https://github.com/wp-cli/wp-cli/releases/download/v${WORDPRESS_CLI_VERSION}/wp-cli-${WORDPRESS_CLI_VERSION}.phar" \
+    && \
+    chmod +x /usr/local/bin/wp
