@@ -1,55 +1,40 @@
 <?php
 /**
- * Health Endpoint Drop-in
- *
- * Based on the Health Endpoint plugin by Jon Otaegi
- * Original: https://wordpress.org/plugins/health-endpoint/
- * License: GPLv3
- * 
- * Creates a /health endpoint that returns a 200 OK HTTP status code 
- * while WordPress is performing correctly.
+ * MU Plugin: Health Endpoint
+ * Responds to /health with 200 if WP+DB are OK.
  */
 
-// If this file is called directly, abort.
-if (!defined('WPINC')) {
-    die;
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-/**
- * Filter the list of public query vars in order to allow the WP::parse_request to register the query variable.
- */
-function health_check_query_var($public_query_vars) {
-    $public_query_vars[] = "health_check";
-    return $public_query_vars;
-}
+add_action('muplugins_loaded', function () {
+    // Serve for /health
+    $uri = isset($_SERVER['REQUEST_URI']) ? strtok($_SERVER['REQUEST_URI'], '?') : '';
+    if ($uri !== '/health' && $uri !== '/health/') {
+        return;
+    }
 
-/**
- * Hook the parse_request action and serve the health endpoint when custom query variable is set to 'true'.
- */
-function health_check_request($wp) {
-    if (isset($wp->query_vars["health_check"]) && "true" === $wp->query_vars["health_check"]) {
-        // Use the global instance created by WordPress
-        global $wpdb;
+    global $wpdb;
+    $ok = true;
+    if (method_exists($wpdb, 'check_connection')) {
+        $ok = $wpdb->check_connection(false);
+    } else {
+        $ok = (bool) $wpdb->query('SELECT 1');
+    }
 
-        // Check the connection:
-        if (!$wpdb->check_connection($allow_bail = false)) {
-            die(__("No DB connection"));
+    if ($ok) {
+        status_header(200);
+        if (!headers_sent()) {
+            header('Content-Length: 0');
         }
-
-        header("Content-length: 0");
         exit;
     }
-}
 
-/**
- * Register the rewrite rule for /health request.
- */
-function health_endpoint_rewrite() {
-    add_rewrite_rule("^health$", "index.php?health_check=true", "top");
-    flush_rewrite_rules();
-}
-
-// Hook into WordPress
-add_filter("query_vars", "health_check_query_var", 10, 1);
-add_action("parse_request", "health_check_request", 10, 1);
-add_action("init", "health_endpoint_rewrite", 10);
+    status_header(503);
+    if (!headers_sent()) {
+        header('Content-Type: text/plain; charset=utf-8');
+    }
+    echo 'No DB connection';
+    exit;
+});
