@@ -6,8 +6,10 @@ FROM wordpress:6.8.2-php8.4-fpm-alpine@sha256:99aa6a047b794445cf3b14fa3243b93637
 # renovate: datasource=github-releases depName=wp-cli/wp-cli
 ENV WORDPRESS_CLI_VERSION 2.11.0
 
-# Install PHP extensions and WP-CLI
 RUN \
+    apk add --no-cache \
+        rsync \
+    && \
     apk add --no-cache --virtual .build-deps \
         $PHPIZE_DEPS \
         bzip2-dev \
@@ -43,4 +45,10 @@ RUN \
     && \
     curl -o /usr/local/bin/wp -fL "https://github.com/wp-cli/wp-cli/releases/download/v${WORDPRESS_CLI_VERSION}/wp-cli-${WORDPRESS_CLI_VERSION}.phar" \
     && \
-    chmod +x /usr/local/bin/wp
+    chmod +x /usr/local/bin/wp \
+    && \
+    find /usr/src/wordpress/wp-content/plugins -mindepth 1 -maxdepth 1 -not -name 'index.php' -delete \
+    && \
+    find /usr/src/wordpress/wp-content/themes -mindepth 1 -maxdepth 1 -not -name 'index.php' -delete
+
+COPY scripts/healthcheck.php /usr/src/wordpress/wp-content/mu-plugins/healthcheck.php
