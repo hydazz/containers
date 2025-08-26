@@ -49,6 +49,8 @@ RUN \
     && \
     find /usr/src/wordpress/wp-content/plugins -mindepth 1 -maxdepth 1 -not -name 'index.php' -delete \
     && \
-    find /usr/src/wordpress/wp-content/themes -mindepth 1 -maxdepth 1 -not -name 'index.php' -delete
+    LATEST_THEME=$(ls -1t /usr/src/wordpress/wp-content/themes/ | grep -v 'index.php' | head -n1) \
+    && \
+    find /usr/src/wordpress/wp-content/themes -mindepth 1 -maxdepth 1 -not -name 'index.php' -not -name "$LATEST_THEME" -delete
 
 COPY scripts/healthcheck.php /usr/src/wordpress/wp-content/mu-plugins/healthcheck.php
