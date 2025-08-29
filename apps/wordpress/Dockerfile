@@ -53,4 +53,4 @@ RUN \
     && \
     find /usr/src/wordpress/wp-content/themes -mindepth 1 -maxdepth 1 -not -name 'index.php' -not -name "$LATEST_THEME" -exec rm -rf {} +
 
-COPY scripts/healthcheck.php /usr/src/wordpress/wp-content/mu-plugins/healthcheck.php
+COPY defaults/mu-plugins /usr/src/wordpress/wp-content/mu-plugins
