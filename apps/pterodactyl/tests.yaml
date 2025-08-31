@@ -3,5 +3,3 @@
 process:
   php-fpm:
     running: true
-  crond:
-    running: true

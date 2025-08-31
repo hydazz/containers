@@ -24,9 +24,13 @@ ln -sf /app/var/.env /app/
 echo -e "Migrating and Seeding D.B"
 php artisan migrate --seed --force || : # who cares
 
-## start cronjobs for the queue
-echo -e "Starting cron jobs."
-crond -L /var/log/crond -l 5
+## start cronjobs for the queue only if running as root
+if [ "$(id -u)" -eq 0 ]; then
+    echo -e "Starting cron jobs."
+    crond -L /var/log/crond -l 5
+else
+    echo -e "Not running as root, skipping cron job setup."
+fi
 
 echo -e "Starting process: $@"
 exec "$@"
