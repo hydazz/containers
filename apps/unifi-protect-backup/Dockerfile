@@ -45,6 +45,5 @@ COPY . /
 USER nobody:nogroup
 WORKDIR /config
 VOLUME ["/config"]
-VOLUME ["/data"]
 
 ENTRYPOINT ["/usr/bin/catatonit", "--", "/entrypoint.sh"]
