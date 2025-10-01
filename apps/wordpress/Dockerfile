@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # renovate: datasource=docker depName=wordpress versioning=docker
-FROM wordpress:6.8.2-php8.4-fpm-alpine@sha256:9887f9d0a9ab641a9cedb40e8f58b014a69451bd69ce0ed60d63204558f9190d
+FROM wordpress:6.8.2-php8.4-fpm-alpine@sha256:f74024347c9f8935f5f8ce1fc9e16b836838b25767af4b72b1d9b2459bf643e7
 
 # renovate: datasource=github-releases depName=wp-cli/wp-cli
 ENV WORDPRESS_CLI_VERSION 2.11.0
