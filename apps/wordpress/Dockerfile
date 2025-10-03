@@ -4,7 +4,7 @@
 FROM wordpress:6.8.3-php8.4-fpm-alpine@sha256:7c7429ad87253fce52e1494976716265c9622657310d05ed30b189620b0fd0ef
 
 # renovate: datasource=github-releases depName=wp-cli/wp-cli
-ENV WORDPRESS_CLI_VERSION=2.11.0
+ENV WORDPRESS_CLI_VERSION=2.12.0
 
 # Install PHP extensions
 RUN \
