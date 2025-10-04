@@ -1,21 +1,20 @@
 # syntax=docker/dockerfile:1
 
 # renovate: datasource=docker depName=wordpress versioning=docker
-FROM wordpress:6.8.3-php8.4-fpm-alpine@sha256:7c7429ad87253fce52e1494976716265c9622657310d05ed30b189620b0fd0ef
+FROM docker.io/library/wordpress:6.8.3-php8.4@sha256:f979a071aa7010e90a74ad2d93d0f0f11855dd0e0d061482d1853f5cda208230
 
 # renovate: datasource=github-releases depName=wp-cli/wp-cli
 ENV WORDPRESS_CLI_VERSION=2.12.0
 
 # Install PHP extensions
 RUN \
-    apk add --no-cache --virtual .build-deps \
-        $PHPIZE_DEPS \
-        bzip2-dev \
-        gettext-dev \
-        gmp-dev \
-        libxml2-dev \
-        tidyhtml-dev \
-        libxslt-dev \
+    apt-get update \
+    && \
+    apt-get install -y --no-install-recommends \
+        libbz2-dev \
+        libgmp-dev \
+        libtidy-dev \
+        libxslt1-dev \
     && \
     docker-php-ext-install -j$(nproc) \
         bz2 \
@@ -25,21 +24,18 @@ RUN \
         soap \
         tidy \
         xsl \
+    \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && rm -r /tmp/pear \
     && \
-    pecl install redis \
+    apt-get purge -y --auto-remove \
+        libbz2-dev \
+        libgmp-dev \
+        libtidy-dev \
+        libxslt1-dev \
     && \
-    docker-php-ext-enable redis \
-    && \
-    runDeps="$( \
-        scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
-            | tr ',' '\n' \
-            | sort -u \
-            | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
-    )" \
-    && \
-    apk add --virtual .php-ext-rundeps $runDeps \
-    && \
-    apk del .build-deps
+    rm -rf /var/lib/apt/lists/*
 
 # Add WP-CLI and clean up default plugins and themes
 RUN \
