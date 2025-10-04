@@ -15,6 +15,8 @@ RUN \
         libgmp-dev \
         libtidy-dev \
         libxslt1-dev \
+        libtidy58 \
+        libxslt1.1 \
     && \
     docker-php-ext-install -j$(nproc) \
         bz2 \
