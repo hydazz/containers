@@ -6,7 +6,7 @@ variable "APP" {
 
 variable "VERSION" {
   // renovate: datasource=pypi depName=unifi-protect-backup
-  default = "0.14.0"
+  default = "0.14.1"
 }
 
 variable "SOURCE" {
