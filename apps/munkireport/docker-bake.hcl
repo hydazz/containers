@@ -6,7 +6,7 @@ variable "APP" {
 
 variable "VERSION" {
   // renovate: datasource=github-releases depName=munkireport/munkireport-php
-  default = "v5.8.0"
+  default = "v5.8.1"
 }
 
 variable "SOURCE" {
