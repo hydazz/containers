@@ -4,7 +4,7 @@
 FROM composer:2 AS composer
 
 # renovate: datasource=docker depName=php versioning=docker
-FROM php:8.3-apache
+FROM php:8.5-apache
 
 ARG VERSION
 
