@@ -1,6 +1,6 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["github>hydazz/renovate-config"],
+  extends: ["github>home-operations/renovate-config"],
   customManagers: [
     {
       customType: "regex",
@@ -47,9 +47,7 @@
     plex: {
       defaultRegistryUrlTemplate: "https://plex.tv/api/downloads/5.json",
       format: "json",
-      transformTemplates: [
-        '{"releases":[{"version": computer.Linux.version}]}',
-      ],
+      transformTemplates: ['{"releases":[{"version": computer.Linux.version}]}'],
     },
   },
   packageRules: [
@@ -74,7 +72,7 @@
       description: ["Allowed Ubuntu Version for Base Images"],
       matchDatasources: ["docker"],
       matchPackageNames: ["/ubuntu/"],
-      allowedVersions: "/24\\.04/",
+      allowedVersions: "/26\\.04/",
     },
     {
       description: ["Allowed Alpine Version for Base Images"],
