@@ -6,7 +6,7 @@ variable "APP" {
 
 variable "VERSION" {
   // renovate: datasource=docker depName=wordpress versioning=docker
-  default = "7.0.1-php8.4"
+  default = "7.0.2-php8.4"
 }
 
 variable "SOURCE" {
