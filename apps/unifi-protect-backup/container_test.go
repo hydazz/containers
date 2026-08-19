@@ -3,10 +3,10 @@ package main
 import (
 	"testing"
 
-	helpers "github.com/home-operations/containers/tests"
+	helpers "github.com/hydazz/containers/tests"
 )
 
 func Test(t *testing.T) {
-	image := helpers.GetTestImage("ghcr.io/home-operations/unifi-protect-backup:rolling")
+	image := helpers.GetTestImage("ghcr.io/hydazz/unifi-protect-backup:rolling")
 	helpers.RequireCommandSucceeds(t, image, nil, "unifi-protect-backup", "--version")
 }
