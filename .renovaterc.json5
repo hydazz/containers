@@ -65,7 +65,6 @@
       description: ["Auto-merge App Updates"],
       matchFileNames: ["**/docker-bake.hcl"],
       automerge: true,
-      automergeType: "pr",
       ignoreTests: false,
     },
     {
@@ -79,20 +78,20 @@
       matchDatasources: ["docker"],
       matchFileNames: ["**/Dockerfile"],
       matchPackageNames: ["/alpine/"],
-      allowedVersions: "/3\\.23/",
+      allowedVersions: "/3\\.24/",
     },
     {
       description: ["Allowed Alpine Version for Postgres Base Images"],
       matchDatasources: ["docker"],
       matchPackageNames: ["/postgres/"],
-      allowedVersions: "/alpine3\\.23/",
+      allowedVersions: "/alpine3\\.24/",
     },
     {
       description: ["Allowed Python Version for Alpine Base Images"],
       matchDatasources: ["docker"],
       matchFileNames: ["**/Dockerfile"],
       matchPackageNames: ["/python/"],
-      allowedVersions: "/3\\.14-alpine3\\.23/",
+      allowedVersions: "/3\\.14-alpine3\\.24/",
     },
     {
       description: ["Allowed Python Version for Debian Base Images"],
@@ -100,20 +99,6 @@
       matchFileNames: ["**/Dockerfile"],
       matchPackageNames: ["/python/"],
       allowedVersions: "/3\\.14-slim/",
-    },
-    {
-      description: ["Allowed Python Version for ESPHome Base Image"],
-      matchDatasources: ["docker"],
-      matchFileNames: ["apps/esphome/Dockerfile"],
-      matchPackageNames: ["/python/"],
-      allowedVersions: "/3\\.13-slim/",
-    },
-    {
-      description: ["Allowed Java Version for NZBHydra2 Base Image"],
-      matchDatasources: ["docker"],
-      matchFileNames: ["apps/nzbhydra2/Dockerfile"],
-      matchPackageNames: ["/amazoncorretto/"],
-      allowedVersions: "/17-alpine3\\.22/",
     },
   ],
 }
