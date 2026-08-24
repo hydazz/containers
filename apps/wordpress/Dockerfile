@@ -18,7 +18,7 @@ RUN \
         libtidy58 \
         libxslt1.1 \
     && \
-    docker-php-ext-install -j$(nproc) \
+    docker-php-ext-install -j"$(nproc)" \
         bz2 \
         gettext \
         gmp \
@@ -47,7 +47,7 @@ RUN \
     && \
     find /usr/src/wordpress/wp-content/plugins -mindepth 1 -maxdepth 1 -not -name 'index.php' -exec rm -rf {} + \
     && \
-    LATEST_THEME=$(ls -1t /usr/src/wordpress/wp-content/themes/ | grep -v 'index.php' | head -n1) \
+    LATEST_THEME=$(find /usr/src/wordpress/wp-content/themes -mindepth 1 -maxdepth 1 -type d -printf '%T@ %f\n' | sort -nr | head -n 1 | cut -d ' ' -f 2-) \
     && \
     find /usr/src/wordpress/wp-content/themes -mindepth 1 -maxdepth 1 -not -name 'index.php' -not -name "$LATEST_THEME" -exec rm -rf {} +
 
