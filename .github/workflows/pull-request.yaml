@@ -86,12 +86,9 @@ jobs:
     name: Build ${{ matrix.app }}
     needs:
       - prepare
-    uses: $/.github/workflows/app-builder.yaml
+    uses: $/.github/workflows/build-image.yaml
     permissions:
-      attestations: write
       contents: read
-      id-token: write
-      packages: write
     strategy:
       matrix:
         app: ${{ fromJSON(needs.prepare.outputs.changed-files) }}
