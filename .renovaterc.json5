@@ -68,6 +68,14 @@
       ignoreTests: false,
     },
     {
+      description: ["Paessler Apt Repository"],
+      matchDatasources: ["deb"],
+      matchPackageNames: ["prtgmpprobe"],
+      registryUrls: [
+        "https://packages.paessler.com/apt?suite=trixie&components=main&binaryArch=amd64",
+      ],
+    },
+    {
       description: ["Allowed Ubuntu Version for Base Images"],
       matchDatasources: ["docker"],
       matchPackageNames: ["/ubuntu/"],

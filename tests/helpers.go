@@ -3,6 +3,7 @@ package helpers
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"testing"
 	"time"
@@ -163,4 +164,27 @@ func RequireCommandSucceeds(t *testing.T, image string, config *ContainerConfig,
 	ctx := t.Context()
 	container := runContainer(t, ctx, image, opts...)
 	requireExitZero(t, ctx, container, fmt.Sprintf("command '%s %v' should succeed", entrypoint, args))
+}
+
+// RequireLogMatch starts the container with its own entrypoint, waits for a log line matching the
+// regular expression pattern, and returns the container output up to that point.
+func RequireLogMatch(t *testing.T, image string, config *ContainerConfig, pattern string) string {
+	t.Helper()
+
+	opts := []testcontainers.ContainerCustomizer{
+		testcontainers.WithWaitStrategy(wait.ForLog(pattern).AsRegexp()),
+	}
+
+	opts = append(opts, applyContainerConfig(config)...)
+
+	ctx := t.Context()
+	container := runContainer(t, ctx, image, opts...)
+
+	logs, err := container.Logs(ctx)
+	require.NoError(t, err)
+	defer logs.Close()
+
+	out, err := io.ReadAll(logs)
+	require.NoError(t, err)
+	return string(out)
 }
