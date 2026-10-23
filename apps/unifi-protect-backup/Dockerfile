@@ -26,6 +26,7 @@ ENV IGNORE_CAMERAS="" \
 
 USER root
 
+# apprise<2: unifi-protect-backup reads Apprise.servers, which Apprise 2 removed
 RUN \
     apk add --no-cache \
         bash \
@@ -35,6 +36,7 @@ RUN \
     && \
     pip3 install \
         "unifi-protect-backup==${VERSION}" \
+        "apprise<2" \
     && \
     rm -rf /tmp/*
 

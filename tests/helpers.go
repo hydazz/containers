@@ -164,3 +164,16 @@ func RequireCommandSucceeds(t *testing.T, image string, config *ContainerConfig,
 	container := runContainer(t, ctx, image, opts...)
 	requireExitZero(t, ctx, container, fmt.Sprintf("command '%s %v' should succeed", entrypoint, args))
 }
+
+// RequireLogContains tests that the container, started with its own entrypoint, logs text before the startup timeout
+func RequireLogContains(t *testing.T, image string, config *ContainerConfig, text string) {
+	t.Helper()
+
+	opts := []testcontainers.ContainerCustomizer{
+		testcontainers.WithWaitStrategy(wait.ForLog(text)),
+	}
+
+	opts = append(opts, applyContainerConfig(config)...)
+
+	_ = runContainer(t, t.Context(), image, opts...)
+}
