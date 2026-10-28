@@ -1,0 +1,9 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/jdx/jactionlint/main/schema/jactionlint-config.json
+ignores:
+  - rule: dangerous-triggers
+    file: .github/workflows/labeler.yaml
+    reason: Labeler runs on pull_request_target to label fork PRs. It checks out with persist-credentials false and acts only through a scoped app token.
+  - rule: dangerous-triggers
+    file: .github/workflows/retry-release.yaml
+    reason: Retry Release checks out nothing and runs no code from the triggering run. It only re-runs the failed jobs of a push-triggered Release run through the API.
