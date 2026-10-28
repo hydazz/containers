@@ -27,6 +27,7 @@ jobs:
   plan:
     name: Plan
     runs-on: ubuntu-26.04
+    timeout-minutes: 15
     permissions:
       contents: read
     outputs:
@@ -90,6 +91,7 @@ jobs:
       matrix:
         platform: ${{ fromJson(needs.plan.outputs.platforms) }}
     runs-on: ${{ startsWith(matrix.platform, 'linux/arm') && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    timeout-minutes: 15
     env:
       APP: ${{ inputs.app }}
     steps:
