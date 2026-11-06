@@ -16,9 +16,6 @@ defaults:
   run:
     shell: bash
 
-env:
-  MISE_NO_HOOKS: "1"
-
 jobs:
   prepare:
     name: Prepare
@@ -46,8 +43,10 @@ jobs:
           json: true
           path: apps
 
-  go-check:
-    name: Go Compile & Vet
+  checks:
+    name: Go and workflow checks
+    env:
+      MISE_NO_HOOKS: "1"
     runs-on: ubuntu-26.04
     timeout-minutes: 15
     permissions:
@@ -61,41 +60,21 @@ jobs:
       - name: Setup Mise
         uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
         with:
-          install_args: --locked go
-
-      - name: Restore Go Modules
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+          install_args: --locked go hadolint jactionlint
 
       - name: Compile tests
-        run: go test -run='^$' ./...
+        run: go test -vet=off -run='^$' ./...
 
       - name: Vet
         run: go vet ./...
 
-  hadolint:
-    name: Hadolint
-    runs-on: ubuntu-26.04
-    timeout-minutes: 15
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - name: Setup Mise
-        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
-        with:
-          install_args: --locked hadolint
-
-      - name: Hadolint
+      - name: Lint Dockerfiles
         run: git ls-files -z '*Dockerfile' | xargs -0 -r hadolint
+
+      - name: Lint workflows
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: jactionlint --online --shellcheck= --format github
 
   build:
     if: ${{ needs.prepare.outputs.changed-files != '[]' }}
@@ -114,50 +93,22 @@ jobs:
       app: ${{ matrix.app }}
       release: false
 
-  workflow-lint:
-    name: Workflow Lint
-    runs-on: ubuntu-26.04
-    timeout-minutes: 15
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - name: Setup Mise
-        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
-        with:
-          install_args: --locked jactionlint
-
-      - name: Lint workflows
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: jactionlint --online --shellcheck= --format github
-
   status:
     if: ${{ !cancelled() }}
     name: Build Success
     needs:
       - build
-      - go-check
-      - hadolint
+      - checks
       - prepare
-      - workflow-lint
     runs-on: ubuntu-26.04
-    timeout-minutes: 15
+    timeout-minutes: 5
     permissions: {}
     steps:
-      # cancelled counts as failed: !cancelled() above still runs this job when
-      # individual needs were cancelled but the run was not, and a required job
-      # that never reached a verdict must not clear the merge gate.
-      - name: Any jobs failed?
-        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+      - name: Check results
+        env:
+          RESULTS: ${{ toJSON(needs) }}
         run: |
-          exit 1
-
-      - name: All jobs passed or skipped?
-        if: ${{ !(contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) }}
-        run: |
-          echo "All jobs passed or skipped" && echo "${{ toJSON(needs.*.result) }}"
+          jq -e '
+            .prepare.result == "success" and .checks.result == "success" and
+            .build.result == (if (.prepare.outputs["changed-files"] | fromjson | length) == 0 then "skipped" else "success" end)
+          ' <<<"$RESULTS"
