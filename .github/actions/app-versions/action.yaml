@@ -38,9 +38,11 @@ runs:
 
     - name: Setup Mise
       uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+      env:
+        MISE_NO_HOOKS: "1"
       with:
         experimental: true
-        install_args: --locked
+        install_args: --locked node
 
     - name: Setup Node Dependencies
       shell: bash

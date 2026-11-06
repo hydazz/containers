@@ -16,9 +16,11 @@ runs:
   steps:
     - name: Setup Mise
       uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+      env:
+        MISE_NO_HOOKS: "1"
       with:
         experimental: true
-        install_args: --locked
+        install_args: --locked go
 
     - name: Restore Go Modules
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0

@@ -24,6 +24,10 @@ defaults:
   run:
     shell: bash
 
+env:
+  MISE_NO_HOOKS: "1"
+  MISE_TASK_RUN_AUTO_INSTALL: "false"
+
 jobs:
   labeler:
     name: Labeler
@@ -42,8 +46,7 @@ jobs:
       - name: Setup Mise
         uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
         with:
-          experimental: true
-          install_args: --locked
+          install_args: --locked gh yq
 
       - name: Generate Label Config
         run: mise run generate-label-config
@@ -57,8 +60,8 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           set -eu
-          find apps -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | while IFS= read -r app; do
-            gh label create "app/$app" --color "027fa0" --force
+          yq -r 'keys[] | select(test("^app/"))' .github/labeler.yaml | while IFS= read -r label; do
+            gh label create "$label" --color "027fa0" --force
           done
 
       - name: Labeler
