@@ -2,7 +2,7 @@
 experimental = true
 
 [tools]
-jactionlint = "v2.5.0"
+jactionlint = "v2.6.0"
 gh = "2.103.3"
 go = "1.27.4"
 hadolint = "2.15.1"
