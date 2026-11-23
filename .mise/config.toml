@@ -15,7 +15,6 @@ shellcheck = "0.11.0"
 yq = "4.54.3"
 
 [tasks.local-build]
-description = "Build and test the selected image"
 usage = '''
 arg "<app>" help="App directory under apps/"
 '''
@@ -29,7 +28,6 @@ TEST_IMAGE="$image" go test -v ./...
 '''
 
 [tasks.remote-build]
-description = "Start the GitHub release workflow"
 usage = '''
 arg "<app>" help="App directory under apps/"
 flag "--release" help="Publish the image"
